@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FullCalendar, { formatDate } from "@fullcalendar/react";
+import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import Grid from "@mui/material/Unstable_Grid2";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -11,8 +12,10 @@ import {
   ListItem,
   ListItemText,
   Typography,
+
   useTheme,
 } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 
@@ -44,12 +47,21 @@ const Calendar = () => {
       )
     ) {
       selected.event.remove();
+      setCurrentEvents((prevEvents) =>
+        prevEvents.filter((event) => event.id !== selected.event.id)
+      );
     }
+  };
+
+  const handleDeleteButtonClick = (eventId) => {
+    setCurrentEvents((prevEvents) =>
+      prevEvents.filter((event) => event.id !== eventId)
+    );
   };
 
   return (
     <Box m="20px">
-      <Header title="Calendar" subtitle="Full Calendar Interactive Page" />
+      <Header title="Calendário" />
       <Grid container spacing={2}>
         <Grid xs={12} md={4}>
           <Box
@@ -57,7 +69,7 @@ const Calendar = () => {
             p="15px"
             borderRadius="4px"
           >
-            <Typography variant="h5">Events</Typography>
+            <Typography variant="h5">Eventos</Typography>
             <List>
               {currentEvents.map((event) => (
                 <ListItem
@@ -80,6 +92,12 @@ const Calendar = () => {
                       </Typography>
                     }
                   />
+                  <CloseIcon
+                    onClick={() => handleDeleteButtonClick(event.id)}
+
+                  >
+                    X
+                  </CloseIcon>
                 </ListItem>
               ))}
             </List>
@@ -108,18 +126,7 @@ const Calendar = () => {
               select={handleDateClick}
               eventClick={handleEventClick}
               eventsSet={(events) => setCurrentEvents(events)}
-              initialEvents={[
-                {
-                  id: "12315",
-                  title: "All-day event",
-                  date: "2022-09-14",
-                },
-                {
-                  id: "5123",
-                  title: "Timed event",
-                  date: "2022-09-28",
-                },
-              ]}
+              locale={ptBrLocale}
             />
           </Box>
         </Grid>

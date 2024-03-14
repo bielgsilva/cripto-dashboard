@@ -13,11 +13,12 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
+
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
+
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 
-import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -42,13 +43,13 @@ const MyProSidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [selected, setSelected] = useState("Dashboard");
   const { sidebarRTL, } = useSidebarContext();
-  const { collapseSidebar,  collapsed } = useProSidebar();
+  const { collapseSidebar, collapsed } = useProSidebar();
   return (
     <Box
       sx={{
         position: "sticky",
         display: "flex",
-        height: "100vh",
+        height: "100dvh",
         top: 0,
         bottom: 0,
         zIndex: 10000,
@@ -80,7 +81,7 @@ const MyProSidebar = () => {
         breakPoint="md"
         rtl={sidebarRTL}
         backgroundColor={colors.primary[400]}
-        
+
       >
         <Menu iconshape="square">
           <MenuItem
@@ -96,9 +97,9 @@ const MyProSidebar = () => {
               color: colors.grey[100],
             }}
           />
-         
-       
-        
+
+
+
           <Box paddingLeft={collapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
@@ -118,7 +119,7 @@ const MyProSidebar = () => {
 
             <Item
               title="Criptomoedas"
-              to="/contacts"
+              to="/criptos"
               icon={<CurrencyBitcoinIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -138,11 +139,18 @@ const MyProSidebar = () => {
             >
               Futuro
             </Typography>
-      
+
             <Item
-              title="Calendar"
+              title="Calendário"
               to="/calendar"
               icon={<CalendarTodayOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Anotações"
+              to="/notes"
+              icon={<NoteAltIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -154,27 +162,15 @@ const MyProSidebar = () => {
             >
               Gráficos
             </Typography>
+      
             <Item
-              title="Bar Chart"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Pie Chart"
+              title="Grafíco de Torta"
               to="/pie"
               icon={<PieChartOutlineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Line Chart"
-              to="/line"
-              icon={<TimelineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+        
 
           </Box>
         </Menu>
