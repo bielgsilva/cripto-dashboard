@@ -12,18 +12,12 @@ const Criptos = () => {
   const [newRowData, setNewRowData] = useState({
     id: "",
     criptomoeda: "",
-    sigla: "",
     quantidade: "",
     custoMedio: "",
     plataforma: "",
     valor: "",
   });
   const [data, setData] = useState([]);
-
-  const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
 
   useEffect(() => {
     const savedData = localStorage.getItem("criptosData");
@@ -38,14 +32,21 @@ const Criptos = () => {
     localStorage.setItem("criptosData", JSON.stringify(data));
   }, [data]);
 
+  const currencyFormatter = new Intl.NumberFormat("pt-br", {
+    style: "currency",
+    currency: "USD",
+  });
+
   const handleAddRow = () => {
     const id = data.length === 0 ? 1 : data[data.length - 1].id + 1;
-    const updatedData = [...data, { ...newRowData, id }];
+    const quantidade = parseFloat(newRowData.quantidade.replace(",", "."));
+    const custoMedio = parseFloat(newRowData.custoMedio.replace(",", "."));
+    const valor = quantidade * custoMedio;
+    const updatedData = [...data, { ...newRowData, id, valor }];
     setData(updatedData);
     setNewRowData({
       id: "",
       criptomoeda: "",
-      sigla: "",
       quantidade: "",
       custoMedio: "",
       plataforma: "",
@@ -75,14 +76,7 @@ const Criptos = () => {
       headerAlign: "center",
       align: "center",
     },
-    {
-      field: "sigla",
-      headerName: "Sigla",
-      type: "text",
-      headerAlign: "center",
-      align: "center",
-      width: 100,
-    },
+
     {
       field: "quantidade",
       headerName: "Quantidade",
@@ -93,7 +87,8 @@ const Criptos = () => {
     },
     {
       field: "custoMedio",
-      headerName: "Custo Médio",
+      headerName: "Cotação",
+      type: "number",
       width: 150,
       headerAlign: "center",
       align: "center",
@@ -118,6 +113,10 @@ const Criptos = () => {
         currencyFormatter.format(params.value),
     },
     {
+      field: "acao",
+      headerName: "Ações",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params) => (
         <IconButton onClick={() => handleDeleteRow(params.row.id)}>
           <CloseOutlinedIcon />
@@ -149,7 +148,7 @@ const Criptos = () => {
           "& .name-column--cell": {
             color: colors.greenAccent[300],
           },
-      
+
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: colors.blueAccent[700],
             borderBottom: "none",
@@ -200,13 +199,6 @@ const Criptos = () => {
             }
           />
           <TextField
-            label="Sigla"
-            value={newRowData.sigla}
-            onChange={(e) =>
-              setNewRowData({ ...newRowData, sigla: e.target.value })
-            }
-          />
-          <TextField
             label="Quantidade"
             value={newRowData.quantidade}
             onChange={(e) =>
@@ -214,7 +206,7 @@ const Criptos = () => {
             }
           />
           <TextField
-            label="Custo Médio"
+            label="Cotação"
             value={newRowData.custoMedio}
             onChange={(e) =>
               setNewRowData({ ...newRowData, custoMedio: e.target.value })
@@ -227,14 +219,6 @@ const Criptos = () => {
               setNewRowData({ ...newRowData, plataforma: e.target.value })
             }
           />
-          <TextField
-            label="Valor"
-            value={newRowData.valor}
-            onChange={(e) =>
-              setNewRowData({ ...newRowData, valor: e.target.value })
-            }
-          />
-
           <Button variant="contained" onClick={handleAddRow}>
             Adicionar
           </Button>
