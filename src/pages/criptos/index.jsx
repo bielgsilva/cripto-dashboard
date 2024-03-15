@@ -32,16 +32,32 @@ const Criptos = () => {
     localStorage.setItem("criptosData", JSON.stringify(data));
   }, [data]);
 
-  const currencyFormatter = new Intl.NumberFormat("pt-br", {
+  const currencyFormatter = new Intl.NumberFormat("en", {
     style: "currency",
     currency: "USD",
   });
 
   const handleAddRow = () => {
     const id = data.length === 0 ? 1 : data[data.length - 1].id + 1;
-    const quantidade = parseFloat(newRowData.quantidade.replace(",", "."));
-    const custoMedio = parseFloat(newRowData.custoMedio.replace(",", "."));
-    const valor = quantidade * custoMedio;
+
+
+    console.log(newRowData.quantidade);
+    console.log(typeof newRowData.custoMedio);
+
+    const quantidade = parseFloat(newRowData.quantidade)
+    const custoMedio = parseFloat(newRowData.custoMedio)
+
+    console.log(typeof newRowData.quantidade);
+    console.log(typeof newRowData.custoMedio);
+    let valor = quantidade * custoMedio
+
+    valor = String(valor)
+
+
+    console.log(quantidade);
+    console.log(custoMedio);
+    console.log(valor);
+
     const updatedData = [...data, { ...newRowData, id, valor }];
     setData(updatedData);
     setNewRowData({
@@ -58,6 +74,20 @@ const Criptos = () => {
   const handleDeleteRow = (id) => {
     const updatedData = data.filter((item) => item.id !== id);
     setData(updatedData.map((item, index) => ({ ...item, id: index + 1 })));
+  };
+
+  const formatQuantity = (value) => {
+    const formattedValue = value
+      .replace(/[^\d.]/g, "")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    setNewRowData({ ...newRowData, qu: formattedValue });
+  };
+
+  const formatCustoMedio = (value) => {
+    const formattedValue = value
+      .replace(/[^\d.]/g, "")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    setNewRowData({ ...newRowData, custoMedio: formattedValue });
   };
 
   const columns = [
@@ -137,7 +167,6 @@ const Criptos = () => {
         m="0 0 0 0"
         width="100%"
         height="80vh"
-
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -201,17 +230,26 @@ const Criptos = () => {
           <TextField
             label="Quantidade"
             value={newRowData.quantidade}
-            onChange={(e) =>
-              setNewRowData({ ...newRowData, quantidade: e.target.value })
-            }
+            onChange={(e) => {
+              const formattedValue = e.target.value
+                .replace(/[^\d.]/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+              setNewRowData({ ...newRowData, quantidade: formattedValue });
+            }}
           />
+
           <TextField
             label="Cotação"
             value={newRowData.custoMedio}
-            onChange={(e) =>
-              setNewRowData({ ...newRowData, custoMedio: e.target.value })
-            }
+            onChange={(e) => {
+              const onlyNumbers = e.target.value.replace(/[^\d.]/g, '');
+              setNewRowData({ ...newRowData, custoMedio: onlyNumbers });
+            }}
           />
+
+
+
+
           <TextField
             label="Plataforma"
             value={newRowData.plataforma}
