@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataInvoices } from "../../data/mockData";
+import data from '../../data/index'
 
 import Header from "../../components/Header";
+import useUser from '../../hooks/useUser'
 
 const Invoices = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { setInvoices} = useUser()
+
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("invoicesData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setInvoices(parsedData);
+    }
+  }, [setInvoices]);
 
   const columns = [
     { field: "id", headerName: "Id" },
@@ -34,7 +45,7 @@ const Invoices = () => {
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="Relatório de Compras"  />
+        <Header title="Relatório de Compra e Venda" />
       </Box>
       <Box
         m="8px 0 0 0"
@@ -68,7 +79,7 @@ const Invoices = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={mockDataInvoices} columns={columns} />
+        <DataGrid checkboxSelection rows={data} columns={columns} />
       </Box>
     </Box>
   );

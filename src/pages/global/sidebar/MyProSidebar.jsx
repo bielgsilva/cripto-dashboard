@@ -155,22 +155,6 @@ const MyProSidebar = () => {
               setSelected={setSelected}
             />
 
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 20px 5px 20px" }}
-            >
-              Gráficos
-            </Typography>
-      
-            <Item
-              title="Grafíco de Torta"
-              to="/pie"
-              icon={<PieChartOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-        
 
           </Box>
         </Menu>

@@ -5,7 +5,9 @@ import { tokens } from "../../theme";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Header from "../../components/Header";
 
-const Criptos = () => {
+const Criptos = ({ onDataUpdate }) => {
+  
+  
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [openModal, setOpenModal] = useState(false);
@@ -30,7 +32,13 @@ const Criptos = () => {
 
   useEffect(() => {
     localStorage.setItem("criptosData", JSON.stringify(data));
-  }, [data]);
+    // Atualize os dados para o Dashboard
+    if (onDataUpdate) {
+      const totalValue = data.reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
+      const totalQuantity = data.reduce((acc, curr) => acc + parseFloat(curr.quantidade), 0);
+      onDataUpdate({ totalValue, totalQuantity });
+    }
+  }, [data, onDataUpdate]);
 
   const currencyFormatter = new Intl.NumberFormat("en", {
     style: "currency",
@@ -40,21 +48,10 @@ const Criptos = () => {
   const handleAddRow = () => {
     const id = data.length === 0 ? 1 : data[data.length - 1].id + 1;
 
-
     const quantidade = parseFloat(newRowData.quantidade)
     const cotacao = parseFloat(newRowData.cotacao)
-
-    console.log(typeof newRowData.quantidade);
-    console.log(typeof newRowData.cotacao);
-
     let valor = quantidade * cotacao
-
     valor = String(valor)
-
-
-    console.log(quantidade);
-    console.log(cotacao);
-    console.log(valor);
 
     const updatedData = [...data, { ...newRowData, id, valor }];
     setData(updatedData);
@@ -73,7 +70,6 @@ const Criptos = () => {
     const updatedData = data.filter((item) => item.id !== id);
     setData(updatedData.map((item, index) => ({ ...item, id: index + 1 })));
   };
-
 
   const columns = [
     {
