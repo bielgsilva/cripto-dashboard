@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar, { formatDate } from "@fullcalendar/react";
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import Grid from "@mui/material/Unstable_Grid2";
@@ -24,19 +24,32 @@ const Calendar = () => {
   const colors = tokens(theme.palette.mode);
   const [currentEvents, setCurrentEvents] = useState([]);
 
+  // Carregar eventos salvos no localStorage quando o componente for montado
+  useEffect(() => {
+    const savedEvents = JSON.parse(localStorage.getItem("calendarEvents")) || [];
+    setCurrentEvents(savedEvents);
+  }, []);
+
+  // Atualizar o localStorage sempre que os eventos mudarem
+  useEffect(() => {
+    localStorage.setItem("calendarEvents", JSON.stringify(currentEvents));
+  }, [currentEvents]);
+
   const handleDateClick = (selected) => {
     const title = prompt("Please enter a new title for your event");
     const calendarApi = selected.view.calendar;
     calendarApi.unselect();
 
     if (title) {
-      calendarApi.addEvent({
+      const newEvent = {
         id: `${selected.dateStr}-${title}`,
         title,
         start: selected.startStr,
         end: selected.endStr,
         allDay: selected.allDay,
-      });
+      };
+      calendarApi.addEvent(newEvent);
+      setCurrentEvents([...currentEvents, newEvent]);
     }
   };
 
@@ -125,7 +138,7 @@ const Calendar = () => {
               dayMaxEvents={true}
               select={handleDateClick}
               eventClick={handleEventClick}
-              eventsSet={(events) => setCurrentEvents(events)}
+              events={currentEvents}
               locale={ptBrLocale}
             />
           </Box>

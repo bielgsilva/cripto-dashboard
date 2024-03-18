@@ -34,7 +34,7 @@ const Invoices = () => {
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="INVOICES" subtitle="welcome to you Invoices" />
+        <Header title="Relatório de Compras"  />
       </Box>
       <Box
         m="8px 0 0 0"

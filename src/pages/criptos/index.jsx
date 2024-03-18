@@ -13,8 +13,8 @@ const Criptos = () => {
     id: "",
     criptomoeda: "",
     quantidade: "",
-    custoMedio: "",
-    plataforma: "",
+    cotacao: "",
+    precoMedio: "",
     valor: "",
   });
   const [data, setData] = useState([]);
@@ -41,21 +41,19 @@ const Criptos = () => {
     const id = data.length === 0 ? 1 : data[data.length - 1].id + 1;
 
 
-    console.log(newRowData.quantidade);
-    console.log(typeof newRowData.custoMedio);
-
     const quantidade = parseFloat(newRowData.quantidade)
-    const custoMedio = parseFloat(newRowData.custoMedio)
+    const cotacao = parseFloat(newRowData.cotacao)
 
     console.log(typeof newRowData.quantidade);
-    console.log(typeof newRowData.custoMedio);
-    let valor = quantidade * custoMedio
+    console.log(typeof newRowData.cotacao);
+
+    let valor = quantidade * cotacao
 
     valor = String(valor)
 
 
     console.log(quantidade);
-    console.log(custoMedio);
+    console.log(cotacao);
     console.log(valor);
 
     const updatedData = [...data, { ...newRowData, id, valor }];
@@ -64,7 +62,7 @@ const Criptos = () => {
       id: "",
       criptomoeda: "",
       quantidade: "",
-      custoMedio: "",
+      cotacao: "",
       plataforma: "",
       valor: "",
     });
@@ -76,19 +74,6 @@ const Criptos = () => {
     setData(updatedData.map((item, index) => ({ ...item, id: index + 1 })));
   };
 
-  const formatQuantity = (value) => {
-    const formattedValue = value
-      .replace(/[^\d.]/g, "")
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    setNewRowData({ ...newRowData, qu: formattedValue });
-  };
-
-  const formatCustoMedio = (value) => {
-    const formattedValue = value
-      .replace(/[^\d.]/g, "")
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    setNewRowData({ ...newRowData, custoMedio: formattedValue });
-  };
 
   const columns = [
     {
@@ -113,10 +98,10 @@ const Criptos = () => {
       type: "number",
       headerAlign: "center",
       align: "center",
-      width: 200,
+      width: 200
     },
     {
-      field: "custoMedio",
+      field: "cotacao",
       headerName: "Cotação",
       type: "number",
       width: 150,
@@ -126,11 +111,13 @@ const Criptos = () => {
         currencyFormatter.format(params.value),
     },
     {
-      field: "plataforma",
-      headerName: "Plataforma",
+      field: "precoMedio",
+      headerName: "Preço Médio",
       width: 150,
       headerAlign: "center",
       align: "center",
+      valueFormatter: (params) =>
+        currencyFormatter.format(params.value),
     },
     {
       field: "valor",
@@ -231,32 +218,29 @@ const Criptos = () => {
             label="Quantidade"
             value={newRowData.quantidade}
             onChange={(e) => {
-              const formattedValue = e.target.value
-                .replace(/[^\d.]/g, "")
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-              setNewRowData({ ...newRowData, quantidade: formattedValue });
+              setNewRowData({ ...newRowData, quantidade: e.target.value });
             }}
           />
 
           <TextField
             label="Cotação"
-            value={newRowData.custoMedio}
+            value={newRowData.cotacao}
             onChange={(e) => {
               const onlyNumbers = e.target.value.replace(/[^\d.]/g, '');
-              setNewRowData({ ...newRowData, custoMedio: onlyNumbers });
+              setNewRowData({ ...newRowData, cotacao: onlyNumbers });
             }}
           />
 
 
-
-
           <TextField
-            label="Plataforma"
-            value={newRowData.plataforma}
-            onChange={(e) =>
-              setNewRowData({ ...newRowData, plataforma: e.target.value })
-            }
+            label="Preço Médio"
+            value={newRowData.precoMedio}
+            onChange={(e) => {
+              const onlyNumbers = e.target.value.replace(/[^\d.]/g, '');
+              setNewRowData({ ...newRowData, precoMedio: onlyNumbers });
+            }}
           />
+
           <Button variant="contained" onClick={handleAddRow}>
             Adicionar
           </Button>
