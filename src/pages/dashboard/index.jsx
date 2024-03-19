@@ -7,8 +7,6 @@ import {
 import { tokens } from "../../theme";
 
 import Grid from "@mui/material/Unstable_Grid2";
-import StatBox from "../../components/StatBox";
-import EmailIcon from "@mui/icons-material/Email";
 
 import PieChart from "../../components/PieChart";
 
