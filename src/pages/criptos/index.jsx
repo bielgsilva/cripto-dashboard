@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, Button, Modal, TextField, IconButton } from "@mui/material";
+import {
+  Box,
+  useTheme,
+  Button,
+  Modal,
+  TextField,
+  IconButton,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Header from "../../components/Header";
 
-const Criptos = ({ onDataUpdate }) => {
-
-
+const Invoices = ({ onDataUpdate }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [openModal, setOpenModal] = useState(false);
@@ -16,8 +25,8 @@ const Criptos = ({ onDataUpdate }) => {
     criptomoeda: "",
     quantidade: "",
     cotacao: "",
-    precoMedio: "",
     valor: "",
+    tipo: "Compra", // Adicionando o tipo de compra/venda
   });
   const [data, setData] = useState([]);
 
@@ -34,8 +43,14 @@ const Criptos = ({ onDataUpdate }) => {
     localStorage.setItem("criptosData", JSON.stringify(data));
     // Atualize os dados para o Dashboard
     if (onDataUpdate) {
-      const totalValue = data.reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
-      const totalQuantity = data.reduce((acc, curr) => acc + parseFloat(curr.quantidade), 0);
+      const totalValue = data.reduce(
+        (acc, curr) => acc + parseFloat(curr.valor),
+        0
+      );
+      const totalQuantity = data.reduce(
+        (acc, curr) => acc + parseFloat(curr.quantidade),
+        0
+      );
       onDataUpdate({ totalValue, totalQuantity });
     }
   }, [data, onDataUpdate]);
@@ -48,10 +63,10 @@ const Criptos = ({ onDataUpdate }) => {
   const handleAddRow = () => {
     const id = data.length === 0 ? 1 : data[data.length - 1].id + 1;
 
-    const quantidade = parseFloat(newRowData.quantidade)
-    const cotacao = parseFloat(newRowData.cotacao)
-    let valor = quantidade * cotacao
-    valor = String(valor)
+    const quantidade = parseFloat(newRowData.quantidade);
+    const cotacao = parseFloat(newRowData.cotacao);
+    let valor = quantidade * cotacao;
+    valor = String(valor);
 
     const updatedData = [...data, { ...newRowData, id, valor }];
     setData(updatedData);
@@ -60,8 +75,8 @@ const Criptos = ({ onDataUpdate }) => {
       criptomoeda: "",
       quantidade: "",
       cotacao: "",
-      plataforma: "",
       valor: "",
+      tipo: "Compra", // Reiniciando o tipo para "Compra"
     });
     setOpenModal(false);
   };
@@ -87,14 +102,20 @@ const Criptos = ({ onDataUpdate }) => {
       headerAlign: "center",
       align: "center",
     },
-
+    {
+      field: "tipo",
+      headerName: "Tipo",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "quantidade",
       headerName: "Quantidade",
       type: "number",
       headerAlign: "center",
       align: "center",
-      width: 200
+      width: 200,
     },
     {
       field: "cotacao",
@@ -107,19 +128,11 @@ const Criptos = ({ onDataUpdate }) => {
         currencyFormatter.format(params.value),
     },
     {
-      field: "precoMedio",
-      headerName: "Preço Médio",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      valueFormatter: (params) =>
-        currencyFormatter.format(params.value),
-    },
-    {
       field: "valor",
       headerName: "Valor Total",
+      cellClassName: (params) =>
+        params.row.tipo === "Compra" ? "green-cell" : "red-cell",
       width: 150,
-      cellClassName: "name-column--cell",
       headerAlign: "center",
       align: "center",
       valueFormatter: (params) =>
@@ -160,7 +173,12 @@ const Criptos = ({ onDataUpdate }) => {
           "& .name-column--cell": {
             color: colors.greenAccent[300],
           },
-
+          "& .red-cell": {
+            color: colors.redAccent[500],
+          },
+          "& .green-cell": {
+            color: colors.greenAccent[500],
+          },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: colors.blueAccent[700],
             borderBottom: "none",
@@ -196,20 +214,47 @@ const Criptos = ({ onDataUpdate }) => {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            display: 'flex',
+            display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            gap: "10px"
+            gap: "10px",
           }}
         >
-          <TextField
-            label="Criptomoeda"
-            value={newRowData.criptomoeda}
-            onChange={(e) =>
-              setNewRowData({ ...newRowData, criptomoeda: e.target.value })
-            }
-          />
+          <FormControl sx={{ width: "100%" }}>
+            <InputLabel id="tipo-label">Tipo</InputLabel>
+            <Select
+              labelId="tipo-label"
+              id="tipo"
+              value={newRowData.tipo}
+              onChange={(e) =>
+                setNewRowData({ ...newRowData, tipo: e.target.value })
+              }
+            >
+              <MenuItem value="Compra">Compra</MenuItem>
+              <MenuItem value="Venda">Venda</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl sx={{ width: "100%" }}>
+            <InputLabel id="criptomoeda-label">Criptomoeda</InputLabel>
+            <Select
+              labelId="criptomoeda-label"
+              id="criptomoeda"
+              value={newRowData.criptomoeda}
+              onChange={(e) =>
+                setNewRowData({
+                  ...newRowData,
+                  criptomoeda: e.target.value,
+                })
+              }
+            >
+              <MenuItem value="Bitcoin">Bitcoin</MenuItem>
+              <MenuItem value="Ethereum">Ethereum</MenuItem>
+              <MenuItem value="Solana">Solana</MenuItem>
+              <MenuItem value="BNB">BNB</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             label="Quantidade"
             value={newRowData.quantidade}
@@ -222,18 +267,8 @@ const Criptos = ({ onDataUpdate }) => {
             label="Cotação"
             value={newRowData.cotacao}
             onChange={(e) => {
-              const onlyNumbers = e.target.value.replace(/[^\d.]/g, '');
+              const onlyNumbers = e.target.value.replace(/[^\d.]/g, "");
               setNewRowData({ ...newRowData, cotacao: onlyNumbers });
-            }}
-          />
-
-
-          <TextField
-            label="Preço Médio"
-            value={newRowData.precoMedio}
-            onChange={(e) => {
-              const onlyNumbers = e.target.value.replace(/[^\d.]/g, '');
-              setNewRowData({ ...newRowData, precoMedio: onlyNumbers });
             }}
           />
 
@@ -242,8 +277,9 @@ const Criptos = ({ onDataUpdate }) => {
           </Button>
         </Box>
       </Modal>
-    </Box >
+    </Box>
   );
 };
 
-export default Criptos;
+export default Invoices;
+
