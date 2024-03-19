@@ -6,8 +6,8 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Header from "../../components/Header";
 
 const Criptos = ({ onDataUpdate }) => {
-  
-  
+
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [openModal, setOpenModal] = useState(false);

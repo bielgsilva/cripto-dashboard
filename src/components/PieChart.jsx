@@ -1,39 +1,54 @@
-import React from 'react';
 import { ResponsivePie } from '@nivo/pie';
 import { useTheme } from '@mui/material';
 import { tokens } from '../theme';
-import data from '../data/index'
 
-const PieChart = ({isDashboard=false}) => {
-    const theme = useTheme()
-    const colors = tokens(theme.palette.mode)
+const PieChart = ({ data }) => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+
+    const getRandomColor = () => {
+        const hue = Math.floor(Math.random() * 360); // Cor aleatória entre 0 e 360
+        const saturation = Math.floor(Math.random() * 40) + 50; // Saturação entre 50% e 90%
+        const lightness = Math.floor(Math.random() * 40) + 30; // Luminosidade entre 30% e 70%
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    };
+    
+
+    const pieData = data.map(coin => ({
+        id: coin.criptomoeda,
+        label: coin.criptomoeda,
+        value: coin.valor,
+        color: getRandomColor()
+    }));
+
     return (
         <ResponsivePie
+            data={pieData}
             theme={{
-                axis:{
-                    domain: {           
-                        line:{
-                            stroke:colors.grey[100]
+                axis: {
+                    domain: {
+                        line: {
+                            stroke: colors.grey[100]
                         }
                     },
-                    legend:{
-                        text:{
-                        fill:colors.grey[100] 
+                    legend: {
+                        text: {
+                            fill: colors.grey[100]
                         }
                     },
-                    ticks:{
-                        line:{
-                        stroke:colors.grey[100],
-                        strokeWidth:1
+                    ticks: {
+                        line: {
+                            stroke: colors.grey[100],
+                            strokeWidth: 1
                         },
-                        text:{
-                            fill:colors.grey[100] 
+                        text: {
+                            fill: colors.grey[100]
                         }
                     }
                 },
-                legends:{
-                    text:{
-                        fill:colors.grey[100]
+                legends: {
+                    text: {
+                        fill: colors.grey[100]
                     }
                 },
                 tooltip: {
@@ -43,7 +58,7 @@ const PieChart = ({isDashboard=false}) => {
                     },
                 }
             }}
-            data={data}
+
             margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
             innerRadius={0.5}
             padAngle={0.7}
