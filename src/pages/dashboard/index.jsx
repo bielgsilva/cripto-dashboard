@@ -20,19 +20,18 @@ const Dashboard = () => {
       const parsedData = JSON.parse(savedData);
       setCryptoData(parsedData);
       // Calcular o lucro ou prejuízo
+      // Calcular o lucro ou prejuízo
       const profitsLosses = {};
       parsedData.forEach((transaction) => {
         const { criptomoeda, valor, tipo } = transaction;
         if (!profitsLosses[criptomoeda]) {
           profitsLosses[criptomoeda] = 0;
         }
-        if (tipo === "Compra") {
-          profitsLosses[criptomoeda] -= parseFloat(valor); // Se for compra, é um gasto
-        } else {
-          profitsLosses[criptomoeda] += parseFloat(valor); // Se for venda, é um ganho
-        }
+        // Se for compra, é um gasto, se for venda, é um ganho
+        profitsLosses[criptomoeda] += tipo === "Compra" ? -parseFloat(valor) : parseFloat(valor);
       });
       setProfitsLosses(profitsLosses);
+
     } else {
       setCryptoData([]);
     }
