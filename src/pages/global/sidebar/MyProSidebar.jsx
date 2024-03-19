@@ -12,7 +12,6 @@ import { useTheme, Box, Typography } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
@@ -123,13 +122,7 @@ const MyProSidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Relatórios"
-              to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+        
 
             <Typography
               variant="h6"

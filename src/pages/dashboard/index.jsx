@@ -10,10 +10,8 @@ const Dashboard = () => {
 
   // Estado para armazenar os dados das criptomoedas
   const [cryptoData, setCryptoData] = useState([]);
-  // Estado para armazenar os dados do preço médio
-  const [averagePrices, setAveragePrices] = useState({});
-  // Estado para armazenar os valores totais de cada criptomoeda
-  const [totalValues, setTotalValues] = useState({});
+  // Estado para armazenar os dados do lucro/prejuízo
+  const [profitsLosses, setProfitsLosses] = useState({});
 
   useEffect(() => {
     const savedData = localStorage.getItem("criptosData");
@@ -21,30 +19,20 @@ const Dashboard = () => {
     if (savedData) {
       const parsedData = JSON.parse(savedData);
       setCryptoData(parsedData);
-      // Calcular o preço médio
-      const prices = {};
-      const totals = {};
+      // Calcular o lucro ou prejuízo
+      const profitsLosses = {};
       parsedData.forEach((transaction) => {
-        const { criptomoeda, quantidade, valor, tipo } = transaction;
-        const price = parseFloat(valor) / parseFloat(quantidade);
-        if (!prices[criptomoeda]) {
-          prices[criptomoeda] = 0;
-          totals[criptomoeda] = 0;
+        const { criptomoeda, valor, tipo } = transaction;
+        if (!profitsLosses[criptomoeda]) {
+          profitsLosses[criptomoeda] = 0;
         }
         if (tipo === "Compra") {
-          prices[criptomoeda] += price;
-          totals[criptomoeda] += parseFloat(valor);
+          profitsLosses[criptomoeda] -= parseFloat(valor); // Se for compra, é um gasto
         } else {
-          prices[criptomoeda] -= price;
-          totals[criptomoeda] -= parseFloat(valor);
+          profitsLosses[criptomoeda] += parseFloat(valor); // Se for venda, é um ganho
         }
       });
-      // Calcular o preço médio final
-      Object.keys(prices).forEach((criptomoeda) => {
-        prices[criptomoeda] /= 2;
-      });
-      setAveragePrices(prices);
-      setTotalValues(totals);
+      setProfitsLosses(profitsLosses);
     } else {
       setCryptoData([]);
     }
@@ -114,7 +102,7 @@ const Dashboard = () => {
               Meus Criptoativos
             </Typography>
           </Box>
-          {Object.keys(averagePrices).map((criptomoeda, index) => (
+          {Object.keys(profitsLosses).map((criptomoeda, index) => (
             <Box
               key={index}
               display="flex"
@@ -127,22 +115,18 @@ const Dashboard = () => {
                 <Typography
                   variant="h5"
                   fontWeight="600"
-                  color={
-                    averagePrices[criptomoeda] >= 0
-                      ? colors.greenAccent[100]
-                      : colors.redAccent[500]
-                  }
                 >
                   {criptomoeda}
                 </Typography>
-                <Typography color={colors.grey[100]}>
-                  Preço Médio: {averagePrices[criptomoeda]}
+              </Box>
+              <Box>
+                <Typography color={profitsLosses[criptomoeda] >= 0 ? colors.greenAccent[500] : colors.redAccent[500]}>
+                  Lucro/Prejuízo: {profitsLosses[criptomoeda]}
                 </Typography>
-                <Typography color={colors.grey[100]}>
-                  Valor Total: {totalValues[criptomoeda]}
-                </Typography>
+
               </Box>
             </Box>
+
           ))}
         </Grid>
       </Box>

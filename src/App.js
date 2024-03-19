@@ -7,7 +7,6 @@ import Topbar from "./pages/global/Topbar";
 
 import Dashboard from "./pages/dashboard";
 import Criptos from "./pages/criptos";
-import Invoices from "./pages/invoices";
 import Calendar from "./pages/calendar";
 import Notes from "./pages/notes";
 
@@ -24,7 +23,6 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/criptos" element={<Criptos />} />
-                <Route path="/invoices" element={<Invoices />} />
                 <Route path="/notes" element={<Notes />} />
 
                 <Route path="/calendar" element={<Calendar />} />
