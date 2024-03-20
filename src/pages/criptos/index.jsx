@@ -251,8 +251,12 @@ const Invoices = ({ onDataUpdate }) => {
             >
               <MenuItem value="Bitcoin">Bitcoin</MenuItem>
               <MenuItem value="Ethereum">Ethereum</MenuItem>
-              <MenuItem value="Solana">Solana</MenuItem>
               <MenuItem value="BNB">BNB</MenuItem>
+              <MenuItem value="Solana">Solana</MenuItem>
+              <MenuItem value="AAVE">AAVE</MenuItem>
+              <MenuItem value="Matic">Matic</MenuItem>
+              <MenuItem value="GALA">GALA</MenuItem>
+       
             </Select>
           </FormControl>
           <TextField
