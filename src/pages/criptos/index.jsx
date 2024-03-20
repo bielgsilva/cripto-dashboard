@@ -256,6 +256,7 @@ const Invoices = ({ onDataUpdate }) => {
               <MenuItem value="AAVE">AAVE</MenuItem>
               <MenuItem value="Matic">Matic</MenuItem>
               <MenuItem value="GALA">GALA</MenuItem>
+              <MenuItem value="XRP">XRP</MenuItem>
        
             </Select>
           </FormControl>
