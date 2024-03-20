@@ -1,41 +1,53 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Button } from "@mui/material";
 import { tokens } from "../../theme";
 import Grid from "@mui/material/Unstable_Grid2";
 import PieChart from "../../components/PieChart";
+import noDataImage from "../../assets/bear.png";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  // Estado para armazenar os dados das criptomoedas
   const [cryptoData, setCryptoData] = useState([]);
-  // Estado para armazenar os dados do lucro/prejuízo
   const [profitsLosses, setProfitsLosses] = useState({});
+  const [transitionCount, setTransactionCount] = useState({});
 
   useEffect(() => {
     const savedData = localStorage.getItem("criptosData");
 
     if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setCryptoData(parsedData);
-      // Calcular o lucro ou prejuízo
-      // Calcular o lucro ou prejuízo
+      setCryptoData(JSON.parse(savedData));
+
+      const transactionCount = {};
       const profitsLosses = {};
-      parsedData.forEach((transaction) => {
+
+      cryptoData.forEach((transaction) => {
         const { criptomoeda, valor, tipo } = transaction;
+
+        // Contagem de transações
+        if (!transactionCount[criptomoeda]) {
+          transactionCount[criptomoeda] = 0;
+        }
+        transactionCount[criptomoeda]++;
+
+        // Cálculo de lucros e perdas
         if (!profitsLosses[criptomoeda]) {
           profitsLosses[criptomoeda] = 0;
         }
-        // Se for compra, é um gasto, se for venda, é um ganho
         profitsLosses[criptomoeda] += tipo === "Compra" ? -parseFloat(valor) : parseFloat(valor);
       });
+
+      setTransactionCount(transactionCount);
       setProfitsLosses(profitsLosses);
 
     } else {
       setCryptoData([]);
     }
   }, []);
+  console.log(transitionCount);
+
 
   // Filtrar os dados para exibir apenas as criptomoedas adicionadas
   const filteredData = cryptoData.filter(
@@ -60,74 +72,109 @@ const Dashboard = () => {
         justifyContent="center"
         gap="50px"
       >
-        <Grid xs={12} sm={12} md={8} lg={8}>
-          <Box backgroundColor={colors.primary[400]}>
-            <Box height="450px" m="-20px 0 0 0">
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                color={colors.grey[100]}
-              >
-                Gráfico de Pizza
-              </Typography>
-              <PieChart data={filteredData} />
-            </Box>
-          </Box>
-        </Grid>
-
-        <Grid
-          xs={12}
-          sm={12}
-          md={4}
-          lg={4}
-          display="flex"
-          flexDirection="column"
-          justifyContent="flex-start"
-          height="100%"
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
-            color={colors.grey[100]}
-            p="15px"
-          >
-            <Typography
-              variant="h5"
-              fontWeight="600"
-              color={colors.grey[100]}
-            >
-              Meus Criptoativos
+        {cryptoData.length === 0 ? (
+          <Box textAlign="center">
+            <img src={noDataImage} alt="No data" />
+            <Typography variant="h5" fontWeight="600" marginBottom="20px" color={colors.grey[100]} mt={2}>
+              Nenhum dado disponível.
             </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              mt={2}
+              component={Link}
+
+              to="/criptos">
+              Adicione criptomoedas
+            </Button>
           </Box>
-          {Object.keys(profitsLosses).map((criptomoeda, index) => (
-            <Box
-              key={index}
+        ) : (
+          <>
+            <Grid xs={12} sm={12} md={8} lg={8}>
+              <Box backgroundColor={colors.primary[400]}>
+                <Box height="450px" m="-20px 0 0 0">
+                  <Typography
+                    variant="h5"
+                    fontWeight="600"
+                    color={colors.grey[100]}
+                  >
+                    Gráfico de Pizza
+                  </Typography>
+                  <PieChart data={filteredData} />
+                </Box>
+              </Box>
+            </Grid>
+
+            <Grid
+              xs={12}
+              sm={12}
+              md={4}
+              lg={4}
               display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
+              flexDirection="column"
+              justifyContent="flex-start"
+              height="100%"
             >
-              <Box>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                color={colors.grey[100]}
+                p="15px"
+              >
                 <Typography
                   variant="h5"
                   fontWeight="600"
+                  color={colors.grey[100]}
                 >
-                  {criptomoeda}
+                  Meus Criptoativos
                 </Typography>
               </Box>
-              <Box>
-                <Typography color={profitsLosses[criptomoeda] >= 0 ? colors.greenAccent[500] : colors.redAccent[500]}>
-                  Lucro/Prejuízo: {profitsLosses[criptomoeda]}
-                </Typography>
 
-              </Box>
-            </Box>
+              {Object.keys(profitsLosses).map((criptomoeda, index) => (
+                <Box
+                  key={index}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderBottom={`4px solid ${colors.primary[500]}`}
+                  p="15px"
+                >
+                  <Box>
+                    <Typography
+                      variant="h5"
+                      fontWeight="600"
+                    >
+                      {criptomoeda}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography
+                      color={
+                        transitionCount[criptomoeda] === 1
+                          ? colors.grey[100]
+                          : profitsLosses[criptomoeda] >= 0
+                            ? colors.greenAccent[500]
+                            : colors.redAccent[500]
+                      }
+                    >
+                      {
+                        transitionCount[criptomoeda] === 1
+                          ? `Valor: ${Math.abs(profitsLosses[criptomoeda]).toFixed(2)}`
+                          : `Lucro/Prejuízo: ${profitsLosses[criptomoeda].toFixed(2)}`
+                      }
 
-          ))}
-        </Grid>
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+
+
+
+            </Grid>
+          </>
+        )}
       </Box>
     </Grid>
   );
