@@ -45,7 +45,7 @@ const Dashboard = () => {
     } else {
       setCryptoData([]);
     }
-  }, []);
+  }, [cryptoData]);
   console.log(transitionCount);
 
 
