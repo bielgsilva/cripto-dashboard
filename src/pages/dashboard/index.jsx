@@ -45,8 +45,8 @@ const Dashboard = () => {
     } else {
       setCryptoData([]);
     }
-  }, [cryptoData]);
-  console.log(transitionCount);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   // Filtrar os dados para exibir apenas as criptomoedas adicionadas
@@ -59,16 +59,18 @@ const Dashboard = () => {
   return (
     <Grid
       container
-      margin="20px"
-      rowSpacing={1}
-      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+      height="100vh"
+      padding="20px"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+
     >
       <Box
         width="100%"
-        height="500px"
-        backgroundColor={colors.primary[400]}
+        height="auto"
+        padding="35px"
         display="flex"
-        alignItems="center"
         justifyContent="center"
         gap="50px"
       >
@@ -91,10 +93,12 @@ const Dashboard = () => {
         ) : (
           <>
             <Grid xs={12} sm={12} md={8} lg={8}>
-              <Box backgroundColor={colors.primary[400]}>
+              <Box backgroundColor={colors.primary[400]} padding="40px 
+              20px">
                 <Box height="450px" m="-20px 0 0 0">
                   <Typography
-                    variant="h5"
+
+                    variant="h3"
                     fontWeight="600"
                     color={colors.grey[100]}
                   >
@@ -114,6 +118,7 @@ const Dashboard = () => {
               flexDirection="column"
               justifyContent="flex-start"
               height="100%"
+              backgroundColor={colors.primary[400]}
             >
               <Box
                 display="flex"
@@ -124,7 +129,7 @@ const Dashboard = () => {
                 p="15px"
               >
                 <Typography
-                  variant="h5"
+                  variant="h3"
                   fontWeight="600"
                   color={colors.grey[100]}
                 >
@@ -169,6 +174,14 @@ const Dashboard = () => {
                   </Box>
                 </Box>
               ))}
+              <Button
+                variant="contained"
+                color="primary"
+                mt={2}
+                component={Link}
+                to="/criptos">
+                Adicione criptomoedas
+              </Button>
 
 
 

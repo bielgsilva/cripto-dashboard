@@ -16,6 +16,8 @@ import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import ShareIcon from '@mui/icons-material/Share';
 
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -122,7 +124,7 @@ const MyProSidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-        
+
 
             <Typography
               variant="h6"
@@ -143,6 +145,28 @@ const MyProSidebar = () => {
               title="Anotações"
               to="/notes"
               icon={<NoteAltIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 20px 5px 20px" }}
+            >
+              Mercado
+            </Typography>
+            <Item
+              title="Cotações"
+              to="/mercado"
+              icon={<EqualizerIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Links"
+              to="/links"
+              icon={<ShareIcon />}
               selected={selected}
               setSelected={setSelected}
             />

@@ -3,12 +3,12 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import { MyProSidebarProvider } from "./pages/global/sidebar/sidebarContext";
 
-import Topbar from "./pages/global/Topbar";
-
 import Dashboard from "./pages/dashboard";
 import Criptos from "./pages/criptos";
 import Calendar from "./pages/calendar";
 import Notes from "./pages/notes";
+import Mercado from "./pages/mercado";
+import Links from "./pages/links";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -19,13 +19,14 @@ const App = () => {
         <MyProSidebarProvider>
           <div style={{ height: "100%", width: "100%" }}>
             <main>
-              <Topbar />
-              <Routes>
+                       <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/criptos" element={<Criptos />} />
-                <Route path="/notes" element={<Notes />} />
 
                 <Route path="/calendar" element={<Calendar />} />
+                <Route path="/notes" element={<Notes />} />
+                <Route path="/mercado" element={<Mercado />} />
+                <Route path="/links" element={<Links />} />
               </Routes>
             </main>
           </div>
