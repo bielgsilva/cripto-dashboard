@@ -17,19 +17,19 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <MyProSidebarProvider>
-          <div style={{ height: "100%", width: "100%" }}>
-            <main>
-                       <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/criptos" element={<Criptos />} />
 
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/notes" element={<Notes />} />
-                <Route path="/mercado" element={<Mercado />} />
-                <Route path="/links" element={<Links />} />
-              </Routes>
-            </main>
-          </div>
+          <main style={{ height: "100%", width: "100%" }}>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/criptos" element={<Criptos />} />
+
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/notes" element={<Notes />} />
+              <Route path="/mercado" element={<Mercado />} />
+              <Route path="/links" element={<Links />} />
+            </Routes>
+          </main>
+
         </MyProSidebarProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>

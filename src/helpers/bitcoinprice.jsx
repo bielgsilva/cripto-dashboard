@@ -12,7 +12,7 @@ const bitcoin = async () => {
 
         const price = response.data.BTCUSD.bid;
         const date = response.data.BTCUSD.create_date;
-        const name = 'Bitcoin';
+        const name = 'Bitcoin (BTC)';
 
         const btc = { price, date, name };
 
@@ -28,7 +28,7 @@ const eth = async () => {
         const response = await btcPrice.get('/json/last/ETH-USD');
 
         const price = response.data.ETHUSD.bid;
-        const name = 'Ethereum';
+        const name = 'Ethereum (ETH)';
 
         const eth = { price, name };
 

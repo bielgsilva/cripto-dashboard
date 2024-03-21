@@ -7,10 +7,12 @@ import { format } from 'date-fns';
 const paperStyle = {
   padding: '20px',
   textAlign: 'center',
-  color: '#fff',
-  backgroundColor: '#1e1e1e',
+  color: 'black',
+  backgroundColor: '#de8419',
   borderRadius: '10px',
-  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.6)',
+  border: '2px solid #000', // Definindo uma borda preta de 2px
+
 };
 
 const Mercado = () => {
@@ -40,7 +42,7 @@ const Mercado = () => {
       gap={"30px"}
 
     >
-      <Header title="Mercado de Criptomoedas" />
+      <Header title="Cotação de Hoje" />
 
       <Grid container spacing={3} justifyContent="center">
         {prices.map((crypto, index) => (
