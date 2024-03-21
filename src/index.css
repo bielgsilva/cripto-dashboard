@@ -26,3 +26,6 @@ body,
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+.focused .MuiOutlinedInput-notchedOutline {
+  border-color: white !important;
+}
