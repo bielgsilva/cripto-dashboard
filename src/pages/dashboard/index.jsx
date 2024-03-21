@@ -45,8 +45,7 @@ const Dashboard = () => {
     } else {
       setCryptoData([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cryptoData]);
 
 
   // Filtrar os dados para exibir apenas as criptomoedas adicionadas
