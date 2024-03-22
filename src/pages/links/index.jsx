@@ -5,7 +5,10 @@ import Header from "../../components/Header";
 const linksData = [
   { title: 'Bitcoin Rainbow Price Chart', url: 'https://www.blockchaincenter.net/en/bitcoin-rainbow-chart/' },
   { title: 'Alt Coin Season', url: 'https://www.blockchaincenter.net/en/altcoin-season-index/' },
-  { title: 'TradingView', url: 'https://br.tradingview.com/chart/2PVqqdVZ/?symbol=TVC%3ADXY' },
+  { title: 'TradingView - DXY', url: 'https://br.tradingview.com/chart/2PVqqdVZ/?symbol=TVC%3ADXY' },
+  { title: 'Calendário Econômico', url: 'https://br.investing.com/economic-calendar/' },
+  { title: 'Tokens-WhatList', url: 'https://coinmarketcap.com/pt-br/watchlist/' },
+  { title: 'Calendário Eventos Cripto', url: 'https://coinmarketcap.com/pt-br/events/' },
 
 ];
 
