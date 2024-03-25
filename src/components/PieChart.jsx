@@ -1,10 +1,11 @@
 import { ResponsivePie } from '@nivo/pie';
-import { useTheme } from '@mui/material';
+import { useTheme, useMediaQuery } from '@mui/material';
 import { tokens } from '../theme';
 
 const PieChart = ({ data }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Verifica se é dispositivo móvel
 
     const getRandomColor = () => {
         const hue = Math.floor(Math.random() * 360); // Cor aleatória entre 0 e 360
@@ -13,14 +14,13 @@ const PieChart = ({ data }) => {
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     };
 
-    const formatValue = value => new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-
     const pieData = data.map(coin => ({
         id: coin.criptomoeda,
         label: coin.criptomoeda,
-        value: formatValue(coin.valor),
+        value: coin.valor,
         color: getRandomColor()
     }));
+
     return (
         <ResponsivePie
             data={pieData}
@@ -59,7 +59,7 @@ const PieChart = ({ data }) => {
                 }
             }}
 
-            margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+            margin={{ top: 40, right: isMobile ? 0 : 80, bottom: isMobile ? 80 : 80, left: isMobile ? 0 : 80 }} // Ajuste das margens para dispositivos móveis
             innerRadius={0.5}
             padAngle={0.7}
             cornerRadius={3}
@@ -139,4 +139,4 @@ const PieChart = ({ data }) => {
 
 }
 
-export default PieChart
+export default PieChart;
