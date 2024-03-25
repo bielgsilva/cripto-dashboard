@@ -17,7 +17,7 @@ const PieChart = ({ data }) => {
     const pieData = data.map(coin => ({
         id: coin.criptomoeda,
         label: coin.criptomoeda,
-        value: coin.valor,
+        value: coin.valor.toFixed(2),
         color: getRandomColor()
     }));
 
