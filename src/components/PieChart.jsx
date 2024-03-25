@@ -12,15 +12,15 @@ const PieChart = ({ data }) => {
         const lightness = Math.floor(Math.random() * 40) + 30; // Luminosidade entre 30% e 70%
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     };
-    
+
+    const formatValue = value => new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 
     const pieData = data.map(coin => ({
         id: coin.criptomoeda,
         label: coin.criptomoeda,
-        value: coin.valor.toFixed(2),
+        value: formatValue(coin.valor),
         color: getRandomColor()
     }));
-
     return (
         <ResponsivePie
             data={pieData}
