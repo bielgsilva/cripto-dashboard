@@ -3,6 +3,8 @@ import { Box, Typography, useTheme, Button, Grid } from "@mui/material";
 import { tokens } from "../../theme";
 import PieChart from "../../components/PieChart";
 import noDataImage from "../../assets/bear.png";
+import Header from "../../components/Header";
+
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
@@ -12,6 +14,7 @@ const Dashboard = () => {
   const [cryptoData, setCryptoData] = useState([]);
   const [profitsLosses, setProfitsLosses] = useState({});
   const [transitionCount, setTransactionCount] = useState({});
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const savedData = localStorage.getItem("criptosData");
@@ -44,8 +47,19 @@ const Dashboard = () => {
     } else {
       setCryptoData([]);
     }
-  }, [cryptoData]);
 
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= theme.breakpoints.values.sm);
+    };
+
+    handleResize(); // Verifica no carregamento da página
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [cryptoData, theme.breakpoints.values.sm]);
 
   // Filtrar os dados para exibir apenas as criptomoedas adicionadas
   const filteredData = cryptoData.filter(
@@ -56,14 +70,16 @@ const Dashboard = () => {
 
   return (
     <Box
-      height="100vh"
       display="flex"
-      alignItems="center"
+      flexDirection={"column"}
       justifyContent="center"
+      padding={"20px"}
     >
+      <Header title="Dashboard" />
+
       {cryptoData.length === 0 ? (
         <Box textAlign="center">
-          <img src={noDataImage} alt="No data" />
+          <img src={noDataImage} alt="No data" style={{ maxWidth: isMobile ? "100%" : "auto" }} /> 
           <Typography variant="h5" fontWeight="600" marginBottom="20px" color={colors.grey[100]} mt={2}>
             Nenhum dado disponível.
           </Typography>
@@ -79,11 +95,11 @@ const Dashboard = () => {
         </Box>
       ) : (
         <Grid container spacing={2}>
+
           <Grid item xs={12} md={8} lg={8}>
-            <Box 
-            backgroundColor={colors.primary[400]}
-            padding="20px"
-            
+            <Box
+              backgroundColor={colors.primary[400]}
+              padding="20px"
             >
               <Typography variant="h3" fontWeight="600" color={colors.grey[100]}>
                 Gráfico de Pizza

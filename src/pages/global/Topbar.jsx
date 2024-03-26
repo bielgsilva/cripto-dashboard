@@ -1,16 +1,11 @@
 import React from "react";
-import { useContext } from "react";
-import { ColorModeContext } from "../../theme";
-import { useTheme, Box, IconButton } from "@mui/material";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import {  Box, IconButton } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 import { useProSidebar } from "react-pro-sidebar";
 const Topbar = () => {
-  const theme = useTheme();
-  const colorMode = useContext(ColorModeContext);
+
   const { toggleSidebar, broken, rtl } = useProSidebar();
 
   return (
@@ -27,14 +22,7 @@ const Topbar = () => {
   
       </Box>
       <Box display="flex">
-        <IconButton onClick={colorMode.toggleColorMode}>
-          {theme.palette.mode === "dark" ? (
-            
-           <LightModeOutlinedIcon />
-          ) : (
-            <DarkModeOutlinedIcon />
-          )}
-        </IconButton>
+  
     
         {broken && rtl && (
           <IconButton
