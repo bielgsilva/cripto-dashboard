@@ -1,7 +1,10 @@
 import { ColorModeContext, useMode } from "./theme";
-import { CssBaseline, ThemeProvider, Container } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import { MyProSidebarProvider } from "./pages/global/sidebar/sidebarContext";
+
+import Topbar from "./pages/global/Topbar";
+
 
 import Dashboard from "./pages/dashboard";
 import Criptos from "./pages/criptos";
@@ -17,9 +20,11 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <MyProSidebarProvider>
-          <Container maxWidth="lg">
 
-            <main style={{ height: "100%", width: "100%" }}>
+          <div style={{ height: "100%", width: "100%" }}>
+            <Topbar />
+
+            <main>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/criptos" element={<Criptos />} />
@@ -30,7 +35,8 @@ const App = () => {
                 <Route path="/links" element={<Links />} />
               </Routes>
             </main>
-          </Container>
+          </div>
+
 
         </MyProSidebarProvider>
       </ThemeProvider>

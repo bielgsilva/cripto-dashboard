@@ -80,7 +80,11 @@ const Dashboard = () => {
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} lg={8}>
-            <Box backgroundColor={colors.primary[400]} padding="40px 20px">
+            <Box 
+            backgroundColor={colors.primary[400]}
+            padding="20px"
+            
+            >
               <Typography variant="h3" fontWeight="600" color={colors.grey[100]}>
                 Gráfico de Pizza
               </Typography>
