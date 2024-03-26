@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
-import { ColorModeContext, tokens } from "../../theme";
-import { useTheme, Box, IconButton, InputBase } from "@mui/material";
+import { ColorModeContext } from "../../theme";
+import { useTheme, Box, IconButton } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 
@@ -10,7 +10,6 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useProSidebar } from "react-pro-sidebar";
 const Topbar = () => {
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const { toggleSidebar, broken, rtl } = useProSidebar();
 
