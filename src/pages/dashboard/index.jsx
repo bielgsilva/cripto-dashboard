@@ -149,7 +149,7 @@ const Dashboard = () => {
 
   // Carregar eventos do localStorage quando o componente é montado
   useEffect(() => {
-    const savedEvents = localStorage.getItem("events");
+    const savedEvents = localStorage.getItem("calendarEvents");
     if (savedEvents) {
       setNextEvents(JSON.parse(savedEvents));
     }
