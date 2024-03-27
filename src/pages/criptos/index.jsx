@@ -22,7 +22,7 @@ const Invoices = ({ onDataUpdate }) => {
   const [openModal, setOpenModal] = useState(false);
   const [newRowData, setNewRowData] = useState({
     id: "",
-    criptomoeda: "",
+    criptomoeda: "Bitcoin",
     quantidade: "",
     cotacao: "",
     valor: "",
@@ -72,7 +72,7 @@ const Invoices = ({ onDataUpdate }) => {
     setData(updatedData);
     setNewRowData({
       id: "",
-      criptomoeda: "",
+      criptomoeda: "Bitcoin",
       quantidade: "",
       cotacao: "",
       valor: "",
@@ -251,13 +251,8 @@ const Invoices = ({ onDataUpdate }) => {
             >
               <MenuItem value="Bitcoin">Bitcoin</MenuItem>
               <MenuItem value="Ethereum">Ethereum</MenuItem>
-              <MenuItem value="BNB">BNB</MenuItem>
-              <MenuItem value="Solana">Solana</MenuItem>
-              <MenuItem value="AAVE">AAVE</MenuItem>
-              <MenuItem value="Matic">Matic</MenuItem>
-              <MenuItem value="GALA">GALA</MenuItem>
               <MenuItem value="XRP">XRP</MenuItem>
-       
+
             </Select>
           </FormControl>
           <TextField

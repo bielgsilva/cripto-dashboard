@@ -4,19 +4,37 @@ import { tokens } from "../../theme";
 import PieChart from "../../components/PieChart";
 import noDataImage from "../../assets/bear.png";
 import Header from "../../components/Header";
+import { bitcoin, eth, xrp } from "../../helpers/bitcoinprice";
 
 import { Link } from "react-router-dom";
+
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [cryptoData, setCryptoData] = useState([]);
-  const [profitsLosses, setProfitsLosses] = useState({});
+
   const [transactionCount, setTransactionCount] = useState({});
   const [isMobile, setIsMobile] = useState(false);
+  const [cryptoPrices, setCryptoPrices] = useState({});
 
   useEffect(() => {
+    // Obtém os preços das criptomoedas
+    const getPrices = async () => {
+      const bitcoinData = await bitcoin();
+      const ethData = await eth();
+      const xrpData = await xrp();
+
+      setCryptoPrices({
+        Bitcoin: bitcoinData.price,
+        Ethereum: ethData.price,
+        XRP: xrpData.price,
+      });
+    };
+
+    getPrices();
+
     const savedData = localStorage.getItem("criptosData");
 
     if (savedData) {
@@ -26,13 +44,17 @@ const Dashboard = () => {
       const updatedProfitsLosses = {};
 
       parsedData.forEach((transaction) => {
-        const { criptomoeda, valor, tipo } = transaction;
+        const { criptomoeda, valor, tipo, quantidade } = transaction;
 
         // Contagem de transações
         if (!updatedTransactionCount[criptomoeda]) {
           updatedTransactionCount[criptomoeda] = 0;
         }
-        updatedTransactionCount[criptomoeda]++;
+        if (tipo === "Compra") {
+          updatedTransactionCount[criptomoeda] += parseFloat(quantidade);
+        } else if (tipo === "Venda") {
+          updatedTransactionCount[criptomoeda] -= parseFloat(quantidade);
+        }
 
         // Cálculo de lucros e perdas
         if (!updatedProfitsLosses[criptomoeda]) {
@@ -42,9 +64,8 @@ const Dashboard = () => {
       });
 
       setTransactionCount(updatedTransactionCount);
-      setProfitsLosses(updatedProfitsLosses);
+  
       setCryptoData(parsedData);
-
     } else {
       setCryptoData([]);
     }
@@ -62,12 +83,66 @@ const Dashboard = () => {
     };
   }, [theme.breakpoints.values.sm]);
 
+  // Função para obter a cotação de uma criptomoeda específica
+  const getCryptoPrice = (criptomoeda) => {
+    return cryptoPrices[criptomoeda];
+  };
+
+  // Calcula o preço médio de uma criptomoeda com base nas transações
+  const calculateAveragePrice = (transactions) => {
+    let totalValue = 0;
+    let totalQuantity = 0;
+
+    // Loop através de todas as transações
+    transactions.forEach((transaction) => {
+      const { quantidade, cotacao, tipo } = transaction;
+      const parsedQuantidade = parseFloat(quantidade);
+      const parsedCotacao = parseFloat(cotacao);
+
+      // Se for uma transação de compra, adiciona ao total
+      if (tipo === "Compra") {
+        totalValue += parsedQuantidade * parsedCotacao;
+        totalQuantity += parsedQuantidade;
+      } else if (tipo === "Venda") {
+        // Se for uma transação de venda, subtrai do total
+        totalValue -= parsedQuantidade * parsedCotacao;
+        totalQuantity -= parsedQuantidade;
+      }
+    });
+
+    // Calcula o preço médio
+    const averagePrice = totalValue / totalQuantity;
+
+    return isNaN(averagePrice) ? 0 : averagePrice;
+  };
+
   // Filtrar os dados para exibir apenas as criptomoedas adicionadas
-  const filteredData = cryptoData.filter(
-    (transaction, index, self) =>
-      index ===
-      self.findIndex((t) => t.criptomoeda === transaction.criptomoeda)
+  const filteredData = Object.values(
+    cryptoData.reduce((acc, transaction) => {
+      if (!acc[transaction.criptomoeda]) {
+        acc[transaction.criptomoeda] = transaction;
+      } else {
+        // Se já existe uma transação para essa criptomoeda, atualiza os valores
+        acc[transaction.criptomoeda].quantidade =
+          parseFloat(acc[transaction.criptomoeda].quantidade) +
+          parseFloat(transaction.quantidade);
+        acc[transaction.criptomoeda].valor =
+          parseFloat(acc[transaction.criptomoeda].valor) +
+          parseFloat(transaction.valor);
+      }
+      return acc;
+    }, {})
   );
+
+  // Calcula o preço médio para cada criptomoeda
+  const cryptoAverages = filteredData.map((transaction) => ({
+    criptomoeda: transaction.criptomoeda,
+    averagePrice: calculateAveragePrice(
+      cryptoData.filter(
+        (t) => t.criptomoeda === transaction.criptomoeda
+      )
+    ),
+  }));
 
   return (
     <Box
@@ -80,8 +155,18 @@ const Dashboard = () => {
 
       {cryptoData.length === 0 ? (
         <Box textAlign="center">
-          <img src={noDataImage} alt="No data" style={{ maxWidth: isMobile ? "100%" : "auto" }} />
-          <Typography variant="h5" fontWeight="600" marginBottom="20px" color={colors.grey[100]} mt={2}>
+          <img
+            src={noDataImage}
+            alt="No data"
+            style={{ maxWidth: isMobile ? "100%" : "auto" }}
+          />
+          <Typography
+            variant="h5"
+            fontWeight="600"
+            marginBottom="20px"
+            color={colors.grey[100]}
+            mt={2}
+          >
             Nenhum dado disponível.
           </Typography>
           <Button
@@ -96,13 +181,16 @@ const Dashboard = () => {
         </Box>
       ) : (
         <Grid container spacing={2}>
-
           <Grid item xs={12} md={8} lg={8}>
             <Box
               backgroundColor={colors.primary[400]}
               padding="20px"
             >
-              <Typography variant="h3" fontWeight="600" color={colors.grey[100]}>
+              <Typography
+                variant="h3"
+                fontWeight="600"
+                color={colors.grey[100]}
+              >
                 Gráfico de Pizza
               </Typography>
               <Box height={450}>
@@ -116,35 +204,50 @@ const Dashboard = () => {
               backgroundColor={colors.primary[400]}
               padding="20px"
             >
-              <Typography variant="h3" fontWeight="600" color={colors.grey[100]} marginBottom="15px">
+              <Typography
+                variant="h3"
+                fontWeight="600"
+                marginBottom={"20px"}
+                color={colors.grey[100]}>
                 Meus Criptoativos
               </Typography>
-              {Object.keys(profitsLosses).map((criptomoeda, index) => (
-                <Box
+              {cryptoAverages.map((cryptoAverage, index) => (
+                <Grid
                   key={index}
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  width={"100%"}
                   borderBottom={`4px solid ${colors.primary[500]}`}
                   marginBottom="15px"
                   paddingBottom="15px"
                 >
-                  <Typography variant="h5" fontWeight="600">
-                    {criptomoeda}
-                  </Typography>
-                  <Typography
-                    color={
-                      transactionCount[criptomoeda] === 1
-                        ? colors.grey[100]
-                        : profitsLosses[criptomoeda] >= 0
-                          ? colors.greenAccent[500]
-                          : colors.redAccent[500]
-                    }
-                  >
-                    {
-                      transactionCount[criptomoeda] === 1
-                        ? `Valor: ${Math.abs(profitsLosses[criptomoeda]).toFixed(2)}`
-                        : `Lucro/Prejuízo: ${profitsLosses[criptomoeda].toFixed(2)}`
-                    }
-                  </Typography>
-                </Box>
+                  <Box>
+                    <Typography variant="h5" fontWeight="600">
+                      {cryptoAverage.criptomoeda}
+                    </Typography>
+                    <Typography>
+                      Cotação atual: {getCryptoPrice(cryptoAverage.criptomoeda)}
+                    </Typography>
+                  </Box>
+
+                  <Box textAlign={"right"}>
+                    <Typography>
+                      Quantidade: {transactionCount[cryptoAverage.criptomoeda]}
+                    </Typography>
+                    <Typography
+                      color={
+                        cryptoAverage.averagePrice === getCryptoPrice(cryptoAverage.criptomoeda)
+                          ? colors.grey[100]
+                          : cryptoAverage.averagePrice >= getCryptoPrice(cryptoAverage.criptomoeda)
+                            ? colors.redAccent[500]
+                            : colors.greenAccent[500]
+                      }
+                    >
+                      Preço médio: {cryptoAverage.averagePrice.toFixed(2)}
+                    </Typography>
+                  </Box>
+                </Grid>
               ))}
               <Button
                 variant="contained"
@@ -163,3 +266,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

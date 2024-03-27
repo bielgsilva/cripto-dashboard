@@ -2,24 +2,16 @@ import { useState } from "react";
 
 export default function ValuesProvider() {
 
-  const [invoices, setInvoices] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const [newRowData, setNewRowData] = useState({
-    id: "",
-    criptomoeda: "",
-    quantidade: "",
-    cotacao: "",
-    precoMedio: "",
-    valor: "",
-  });
-  const [data, setData] = useState([]);
+
+  const [btcPrice, setBtcPrice] = useState('');
+  const [ethPrice, setEthPrice] = useState('');
+  const [xrpPrice, setXrpPrice] = useState('');
 
 
 
   return ({
-    invoices, setInvoices,
-    newRowData, setNewRowData,
-    openModal, setOpenModal,
-    data, setData
+    btcPrice, setBtcPrice,
+    ethPrice, setEthPrice,
+    xrpPrice, setXrpPrice
   });
 }
