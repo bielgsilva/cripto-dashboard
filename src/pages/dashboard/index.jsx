@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, useTheme, Button, Grid } from "@mui/material";
+import { Box, Typography, useTheme, Button, Grid, List, ListItem, ListItemText } from "@mui/material";
 import { tokens } from "../../theme";
 import PieChart from "../../components/PieChart";
 import noDataImage from "../../assets/bear.png";
@@ -18,6 +18,8 @@ const Dashboard = () => {
   const [transactionCount, setTransactionCount] = useState({});
   const [isMobile, setIsMobile] = useState(false);
   const [cryptoPrices, setCryptoPrices] = useState({});
+  const [nextEvents, setNextEvents] = useState([]);
+
 
   useEffect(() => {
     // Obtém os preços das criptomoedas
@@ -64,7 +66,7 @@ const Dashboard = () => {
       });
 
       setTransactionCount(updatedTransactionCount);
-  
+
       setCryptoData(parsedData);
     } else {
       setCryptoData([]);
@@ -143,6 +145,15 @@ const Dashboard = () => {
       )
     ),
   }));
+
+
+  // Carregar eventos do localStorage quando o componente é montado
+  useEffect(() => {
+    const savedEvents = localStorage.getItem("events");
+    if (savedEvents) {
+      setNextEvents(JSON.parse(savedEvents));
+    }
+  }, []);
 
   return (
     <Box
@@ -261,6 +272,53 @@ const Dashboard = () => {
           </Grid>
         </Grid>
       )}
+
+      <Grid>
+        <Box
+
+          padding="20px"
+          marginTop="20px"
+        >
+          <Typography
+            variant="h3"
+            fontWeight="600"
+            marginBottom={"20px"}
+            color={colors.grey[100]}
+          >
+            Próximos Eventos
+          </Typography>
+          {nextEvents.length === 0 ? (
+            <Box
+            display={"flex"}
+            flexDirection={"column"}
+            >
+              <Typography
+                variant="body1"
+                color={colors.grey[100]}
+              >
+                Nenhum evento próximo.
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to="/calendar"
+                
+              >
+                Adicione Eventos
+              </Button>
+            </Box>
+          ) : (
+            <List>
+              {nextEvents.map((event, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={event.name} secondary={event.date} />
+                </ListItem>
+              ))}
+            </List>
+          )}
+        </Box>
+      </Grid>
     </Box>
   );
 };
