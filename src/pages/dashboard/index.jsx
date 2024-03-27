@@ -13,36 +13,37 @@ const Dashboard = () => {
 
   const [cryptoData, setCryptoData] = useState([]);
   const [profitsLosses, setProfitsLosses] = useState({});
-  const [transitionCount, setTransactionCount] = useState({});
+  const [transactionCount, setTransactionCount] = useState({});
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const savedData = localStorage.getItem("criptosData");
 
     if (savedData) {
-      setCryptoData(JSON.parse(savedData));
+      const parsedData = JSON.parse(savedData);
 
-      const transactionCount = {};
-      const profitsLosses = {};
+      const updatedTransactionCount = {};
+      const updatedProfitsLosses = {};
 
-      cryptoData.forEach((transaction) => {
+      parsedData.forEach((transaction) => {
         const { criptomoeda, valor, tipo } = transaction;
 
         // Contagem de transações
-        if (!transactionCount[criptomoeda]) {
-          transactionCount[criptomoeda] = 0;
+        if (!updatedTransactionCount[criptomoeda]) {
+          updatedTransactionCount[criptomoeda] = 0;
         }
-        transactionCount[criptomoeda]++;
+        updatedTransactionCount[criptomoeda]++;
 
         // Cálculo de lucros e perdas
-        if (!profitsLosses[criptomoeda]) {
-          profitsLosses[criptomoeda] = 0;
+        if (!updatedProfitsLosses[criptomoeda]) {
+          updatedProfitsLosses[criptomoeda] = 0;
         }
-        profitsLosses[criptomoeda] += tipo === "Compra" ? -parseFloat(valor) : parseFloat(valor);
+        updatedProfitsLosses[criptomoeda] += tipo === "Compra" ? -parseFloat(valor) : parseFloat(valor);
       });
 
-      setTransactionCount(transactionCount);
-      setProfitsLosses(profitsLosses);
+      setTransactionCount(updatedTransactionCount);
+      setProfitsLosses(updatedProfitsLosses);
+      setCryptoData(parsedData);
 
     } else {
       setCryptoData([]);
@@ -59,7 +60,7 @@ const Dashboard = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [cryptoData, theme.breakpoints.values.sm]);
+  }, [theme.breakpoints.values.sm]);
 
   // Filtrar os dados para exibir apenas as criptomoedas adicionadas
   const filteredData = cryptoData.filter(
@@ -79,7 +80,7 @@ const Dashboard = () => {
 
       {cryptoData.length === 0 ? (
         <Box textAlign="center">
-          <img src={noDataImage} alt="No data" style={{ maxWidth: isMobile ? "100%" : "auto" }} /> 
+          <img src={noDataImage} alt="No data" style={{ maxWidth: isMobile ? "100%" : "auto" }} />
           <Typography variant="h5" fontWeight="600" marginBottom="20px" color={colors.grey[100]} mt={2}>
             Nenhum dado disponível.
           </Typography>
@@ -130,7 +131,7 @@ const Dashboard = () => {
                   </Typography>
                   <Typography
                     color={
-                      transitionCount[criptomoeda] === 1
+                      transactionCount[criptomoeda] === 1
                         ? colors.grey[100]
                         : profitsLosses[criptomoeda] >= 0
                           ? colors.greenAccent[500]
@@ -138,7 +139,7 @@ const Dashboard = () => {
                     }
                   >
                     {
-                      transitionCount[criptomoeda] === 1
+                      transactionCount[criptomoeda] === 1
                         ? `Valor: ${Math.abs(profitsLosses[criptomoeda]).toFixed(2)}`
                         : `Lucro/Prejuízo: ${profitsLosses[criptomoeda].toFixed(2)}`
                     }
