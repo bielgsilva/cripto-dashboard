@@ -151,7 +151,13 @@ const Dashboard = () => {
   useEffect(() => {
     const savedEvents = localStorage.getItem("calendarEvents");
     if (savedEvents) {
-      setNextEvents(JSON.parse(savedEvents));
+      const parsedEvents = JSON.parse(savedEvents);
+
+      const formattedEvents = parsedEvents.map(event => ({
+        title: event.title,
+        start: event.start
+      }));
+      setNextEvents(formattedEvents);
     }
   }, []);
 
@@ -289,8 +295,8 @@ const Dashboard = () => {
           </Typography>
           {nextEvents.length === 0 ? (
             <Box
-            display={"flex"}
-            flexDirection={"column"}
+              display={"flex"}
+              flexDirection={"column"}
             >
               <Typography
                 variant="body1"
@@ -303,7 +309,7 @@ const Dashboard = () => {
                 color="primary"
                 component={Link}
                 to="/calendar"
-                
+
               >
                 Adicione Eventos
               </Button>
