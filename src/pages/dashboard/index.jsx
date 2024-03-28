@@ -4,6 +4,8 @@ import { tokens } from "../../theme";
 import PieChart from "../../components/PieChart";
 import noDataImage from "../../assets/bear.png";
 import Header from "../../components/Header";
+import { format } from 'date-fns';
+
 import { bitcoin, eth, xrp } from "../../helpers/bitcoinprice";
 
 import { Link } from "react-router-dom";
@@ -161,6 +163,12 @@ const Dashboard = () => {
     }
   }, []);
 
+  // dentro do componente Dashboard, antes do return
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, 'dd/MM/yyyy');
+  };
+
   return (
     <Box
       display="flex"
@@ -279,16 +287,21 @@ const Dashboard = () => {
         </Grid>
       )}
 
-      <Grid>
+      <Grid >
         <Box
-
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          gap="20px"
           padding="20px"
           marginTop="20px"
         >
           <Typography
             variant="h3"
             fontWeight="600"
-            marginBottom={"20px"}
+            marginTop={"30px"}
+            marginBottom={"10px"}
             color={colors.grey[100]}
           >
             Próximos Eventos
@@ -315,13 +328,17 @@ const Dashboard = () => {
               </Button>
             </Box>
           ) : (
-            <List>
+            <List sx={{ display: 'flex', gap:"10px",justifyContent:"space-between", width:"100%"}}>
               {nextEvents.map((event, index) => (
                 <ListItem key={index}>
-                  <ListItemText primary={event.name} secondary={event.date} />
+                  <ListItemText primary={event.title} secondary={formatDate(event.start)} sx={{ display: 'flex',justifyContent:"center", flexDirection:"column", alignItems:"center"}} />
                 </ListItem>
               ))}
             </List>
+
+
+
+
           )}
         </Box>
       </Grid>
